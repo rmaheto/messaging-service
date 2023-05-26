@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: messaging-service
+
+mail:
+  host: smtp.gmail.com
+  port: 587
+  protocol: smtp
+  tls: true
+  properties.mail.smtp:
+    auth: true
+    starttls.enable: true
+    ssl.trust: smtp.gmail.com
+  debug: true
+
+server:
+  port: 8090
+  servlet:
+    context-path: "/api/v1"
+
+msgs:
+  registrations:
+    subject: "Hotel Reservation Confirmation"
+    welcome: "Hello %s, we’re excited to have you. Wherever you’re going, requesting a ride is just a tap away, Thank you for registering with Taxi24."
