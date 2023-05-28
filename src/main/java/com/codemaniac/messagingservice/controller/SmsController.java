@@ -1,5 +1,6 @@
 package com.codemaniac.messagingservice.controller;
 
+import com.codemaniac.messagingservice.model.MessageDTO;
 import com.codemaniac.messagingservice.model.SmsMessage;
 import com.codemaniac.messagingservice.service.SmsService;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,8 @@ public class SmsController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendSms(@RequestBody SmsMessage smsMessage) {
-        smsService.sendSms(smsMessage);
+    public ResponseEntity<String> sendSms(@RequestBody MessageDTO smsMessage) {
+        smsService.queueSms(smsMessage);
         return ResponseEntity.ok("SMS sent successfully");
     }
 }

@@ -5,6 +5,6 @@ import lombok.Data;
 import java.util.List;
 @Data
 public abstract class IMessage {
-    private List<String> to;
+    private String receiver;
     private String body;
 }

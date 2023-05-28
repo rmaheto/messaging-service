@@ -1,12 +1,12 @@
 package com.codemaniac.messagingservice.controller;
 
-import com.codemaniac.messagingservice.model.Email;
+import com.codemaniac.messagingservice.model.MessageDTO;
 import com.codemaniac.messagingservice.model.SmsMessage;
 import com.codemaniac.messagingservice.service.SmsService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -30,12 +30,12 @@ public class SmsControllerTest {
     @Test
     public void sendSms() {
 
-        SmsMessage sms = new SmsMessage();
-        sms.setTo(Collections.singletonList("+1525215722"));
+        MessageDTO sms = new MessageDTO();
+        sms.setReceivers(Collections.singletonList("+1525215722"));
         sms.setBody("Hello, World!");
 
         // Create an ArgumentCaptor
-        ArgumentCaptor<SmsMessage> smsCaptor = ArgumentCaptor.forClass(SmsMessage.class);
+        ArgumentCaptor<MessageDTO> smsCaptor = ArgumentCaptor.forClass(MessageDTO.class);
         // Call the method under test
         ResponseEntity<String > response = underTest.sendSms(sms);
 
@@ -43,10 +43,10 @@ public class SmsControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         // Verify that the service was called
-        verify(smsService, times(1)).sendSms(smsCaptor.capture());
+        verify(smsService, times(1)).queueSms(smsCaptor.capture());
         // Assert the argument
-        SmsMessage capturedSms = smsCaptor.getValue();
-        assertEquals("+1525215722", capturedSms.getTo().get(0));
+        MessageDTO capturedSms = smsCaptor.getValue();
+        assertEquals("+1525215722", capturedSms.getReceivers().get(0));
         assertEquals("Hello, World!", capturedSms.getBody());
     }
 }

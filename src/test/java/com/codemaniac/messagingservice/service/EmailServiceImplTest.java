@@ -1,9 +1,15 @@
 package com.codemaniac.messagingservice.service;
 
+import com.codemaniac.messagingservice.TestHelper;
 import com.codemaniac.messagingservice.exception.EmailServerAuthenticationException;
+import com.codemaniac.messagingservice.mapper.ObjectMapperUtil;
 import com.codemaniac.messagingservice.model.Email;
+import com.codemaniac.messagingservice.model.MessageDTO;
+import com.codemaniac.messagingservice.model.QueuedMessage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -11,8 +17,11 @@ import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -20,17 +29,19 @@ import static org.mockito.Mockito.*;
 public class EmailServiceImplTest {
     @Mock
     private JavaMailSender emailSender;
-
+    @Mock
+    private QueueMessageServiceImpl queueMessageService;
+    @Mock
+    private ObjectMapperUtil objectMapperUtil;
+    @Captor
+    ArgumentCaptor<QueuedMessage> captor;
     @InjectMocks
     private EmailServiceImpl emailService;
 
     @Test
     public void sendEmail_Success() {
 
-        Email email = new Email();
-        email.setTo(Collections.singletonList("test@example.com"));
-        email.setSubject("Test Subject");
-        email.setBody("Test Body");
+        Email email = TestHelper.generateTestEmail();
 
         // Perform the test
         emailService.sendEmail(email);
@@ -42,10 +53,7 @@ public class EmailServiceImplTest {
     @Test(expected = EmailServerAuthenticationException.class)
     public void sendEmail_AuthenticationException_ThrowsException() {
         // Prepare test data
-        Email email = new Email();
-        email.setTo(Collections.singletonList("test@example.com"));
-        email.setSubject("Test Subject");
-        email.setBody("Test Body");
+        Email email = TestHelper.generateTestEmail();
 
         // Set up the email sender to throw a MailAuthenticationException
         doThrow(new MailAuthenticationException("Authentication failed"))
@@ -53,5 +61,28 @@ public class EmailServiceImplTest {
 
         // Perform the test, expecting an EmailServerAuthenticationException
         emailService.sendEmail(email);
+    }
+
+    @Test
+    public void queueEmail_Test() {
+        // Setup
+        MessageDTO email = TestHelper.generateEmailMessageDTO();
+
+        // Mocks
+        QueuedMessage mockedMessage = new QueuedMessage();
+        when(objectMapperUtil.mapEmailToMessage(anyString(), anyString(), anyString())).thenReturn(mockedMessage);
+
+        // Execute
+        emailService.queueEmail(email);
+
+        // Verify
+        verify(queueMessageService, times(email.getReceivers().size())).queueMessage(captor.capture());
+        List<QueuedMessage> capturedMessages = captor.getAllValues();
+
+        // Assert
+        assertEquals(email.getReceivers().size(), capturedMessages.size());
+        for (QueuedMessage message : capturedMessages) {
+            assertEquals(mockedMessage, message);
+        }
     }
 }

@@ -1,8 +1,12 @@
 package com.codemaniac.messagingservice.service;
 
+import com.codemaniac.messagingservice.TestHelper;
 import com.codemaniac.messagingservice.config.MessageCreatorWrapper;
 import com.codemaniac.messagingservice.config.PropertiesLoader;
 import com.codemaniac.messagingservice.exception.SmsSendingException;
+import com.codemaniac.messagingservice.mapper.ObjectMapperUtil;
+import com.codemaniac.messagingservice.model.MessageDTO;
+import com.codemaniac.messagingservice.model.QueuedMessage;
 import com.codemaniac.messagingservice.model.SmsMessage;
 import com.twilio.exception.ApiException;
 import com.twilio.http.TwilioRestClient;
@@ -10,14 +14,17 @@ import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.rest.api.v2010.account.MessageCreator;
 import com.twilio.type.PhoneNumber;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,8 +47,15 @@ public class SmsServiceImplTest {
 
     @Mock
     private PropertiesLoader propertiesLoader;
+    @Mock
+    private QueueMessageServiceImpl queueMessageService;
+    @Mock
+    private ObjectMapperUtil objectMapperUtil;
+    @Captor
+    ArgumentCaptor<QueuedMessage> captor;
 
     private SmsMessage sms;
+    private MessageDTO messageDTO;
 
     @InjectMocks
     private SmsServiceImpl smsService;
@@ -51,7 +65,7 @@ public class SmsServiceImplTest {
 
         // Prepare test data
         sms = new SmsMessage();
-        sms.setTo(Collections.singletonList("1234567890"));
+        sms.setReceiver("1234567890");
         sms.setBody("Test SMS");
 
     }
@@ -74,7 +88,7 @@ public class SmsServiceImplTest {
 
         // Capture and verify the arguments
         verify(messageCreatorWrapper).creator(toCaptor.capture(), fromCaptor.capture(), bodyCaptor.capture());
-        assertEquals(sms.getTo().get(0), toCaptor.getValue().getEndpoint());
+        assertEquals(sms.getReceiver(), toCaptor.getValue().getEndpoint());
         assertEquals(TWILIO_NUMBER, fromCaptor.getValue().getEndpoint());
         assertEquals(sms.getBody(), bodyCaptor.getValue());
     }
@@ -93,5 +107,28 @@ public class SmsServiceImplTest {
         when(messageCreatorWrapper.creator(any(PhoneNumber.class), any(PhoneNumber.class), anyString())).thenThrow(RuntimeException.class);
 
         smsService.sendSms(sms);
+    }
+
+    @Test
+    public void queueEmail_Test() {
+        // Setup
+        MessageDTO sms = TestHelper.generateSmsMessageDTO();
+
+        // Mocks
+        QueuedMessage mockedMessage = new QueuedMessage();
+        when(objectMapperUtil.mapSmsToMessage(anyString(), anyString())).thenReturn(mockedMessage);
+
+        // Execute
+        smsService.queueSms(sms);
+
+        // Verify
+        verify(queueMessageService, times(sms.getReceivers().size())).queueMessage(captor.capture());
+        List<QueuedMessage> capturedMessages = captor.getAllValues();
+
+        // Assert
+        assertEquals(sms.getReceivers().size(), capturedMessages.size());
+        for (QueuedMessage message : capturedMessages) {
+            assertEquals(mockedMessage, message);
+        }
     }
 }
