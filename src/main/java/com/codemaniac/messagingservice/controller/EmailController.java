@@ -2,21 +2,22 @@ package com.codemaniac.messagingservice.controller;
 
 import com.codemaniac.messagingservice.model.Email;
 import com.codemaniac.messagingservice.service.EmailService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
-public class MessageController {
+@RequestMapping("/email")
+public class EmailController {
     private final EmailService emailService;
-    @PostMapping("/sendEmail")
+
+    public EmailController(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+    @PostMapping("/send")
     public ResponseEntity<Void> sendMessage(@RequestBody Email email){
                 emailService.sendEmail(email);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
