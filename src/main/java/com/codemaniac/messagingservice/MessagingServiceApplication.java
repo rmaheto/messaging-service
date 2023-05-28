@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @OpenAPIDefinition(
@@ -30,6 +31,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
                 @Server(url = "http://localhost:8090/api/v1", description = "Local server"),
         }
 )
+@EnableScheduling
 public class MessagingServiceApplication {
 
     public static void main(String[] args) {

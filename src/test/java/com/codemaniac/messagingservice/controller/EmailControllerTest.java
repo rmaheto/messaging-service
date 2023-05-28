@@ -1,7 +1,9 @@
 package com.codemaniac.messagingservice.controller;
 
 import com.codemaniac.messagingservice.model.Email;
+import com.codemaniac.messagingservice.model.MessageDTO;
 import com.codemaniac.messagingservice.service.EmailService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -29,23 +31,23 @@ public class EmailControllerTest {
     @Test
     public void sendMessage() {
         // Prepare test data
-        Email email = new Email();
-        email.setTo(Collections.singletonList("test@example.com"));
-        email.setBody("Test email body");
+        MessageDTO message = new MessageDTO();
+        message.setReceivers(Collections.singletonList("test@example.com"));
+        message.setBody("Test email body");
 
         // Create an ArgumentCaptor
-        ArgumentCaptor<Email> emailCaptor = ArgumentCaptor.forClass(Email.class);
+        ArgumentCaptor<MessageDTO> emailCaptor = ArgumentCaptor.forClass(MessageDTO.class);
         // Call the method under test
-        ResponseEntity<Void> response = underTest.sendMessage(email);
+        ResponseEntity<Void> response = underTest.sendMessage(message);
 
         // Assert the response
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         // Verify that the service was called
-        verify(emailService, times(1)).sendEmail(emailCaptor.capture());
+        verify(emailService, times(1)).queueEmail(emailCaptor.capture());
         // Assert the argument
-        Email capturedEmail = emailCaptor.getValue();
-        assertEquals("test@example.com", capturedEmail.getTo().get(0));
+        MessageDTO capturedEmail = emailCaptor.getValue();
+        assertEquals("test@example.com", capturedEmail.getReceivers().get(0));
         assertEquals("Test email body", capturedEmail.getBody());
     }
 }
