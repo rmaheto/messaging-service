@@ -46,7 +46,7 @@ public class MessageServiceTest {
         mockMessage.setStatus("Pending");
         List<QueuedMessage> mockMessageList = Arrays.asList(mockMessage);
 
-        when(messageRepository.findAllByStatus("Pending")).thenReturn(mockMessageList);
+        when(messageRepository.findAllByStatusOrderByCreateTimestampAsc("Pending")).thenReturn(mockMessageList);
 
         Email mockEmail = new Email();
         when(objectMapperUtil.mapMessageToEmail(mockMessage)).thenReturn(mockEmail);
@@ -76,7 +76,7 @@ public class MessageServiceTest {
         mockMessage.setStatus("Pending");
         List<QueuedMessage> mockMessageList = Arrays.asList(mockMessage);
 
-        when(messageRepository.findAllByStatus("Pending")).thenReturn(mockMessageList);
+        when(messageRepository.findAllByStatusOrderByCreateTimestampAsc("Pending")).thenReturn(mockMessageList);
 
         SmsMessage mockSms = new SmsMessage();
         when(objectMapperUtil.mapMessageToSms(mockMessage)).thenReturn(mockSms);
@@ -107,7 +107,7 @@ public class MessageServiceTest {
         mockMessage.setRetryCount(0);
         List<QueuedMessage> mockMessageList = Arrays.asList(mockMessage);
 
-        when(messageRepository.findAllByStatus("Pending")).thenReturn(mockMessageList);
+        when(messageRepository.findAllByStatusOrderByCreateTimestampAsc("Pending")).thenReturn(mockMessageList);
 
         Email mockEmail = new Email();
         when(objectMapperUtil.mapMessageToEmail(mockMessage)).thenReturn(mockEmail);

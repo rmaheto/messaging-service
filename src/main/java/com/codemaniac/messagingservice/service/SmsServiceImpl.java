@@ -44,9 +44,9 @@ public class SmsServiceImpl implements SmsService{
     }
 
     @Override
-    public void queueSms(MessageDTO sms) {
+    public void queueSms(MessageDTO sms, String callingApplication) {
         sms.getReceivers().stream().forEach(receiver -> {
-            QueuedMessage message = objectMapperUtil.mapSmsToMessage(receiver, sms.getBody());
+            QueuedMessage message = objectMapperUtil.mapSmsToMessage(receiver, sms.getBody(),callingApplication);
             queueMessageService.queueMessage(message);
         });
     }

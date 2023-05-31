@@ -42,9 +42,9 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void queueEmail(MessageDTO email) {
+    public void queueEmail(MessageDTO email,String callingApplication) {
         email.getReceivers().stream().forEach(receiver -> {
-            QueuedMessage msg = objectMapperUtil.mapEmailToMessage(receiver, email.getSubject(), email.getBody());
+            QueuedMessage msg = objectMapperUtil.mapEmailToMessage(receiver, email.getSubject(), email.getBody(),callingApplication);
             queueMessageService.queueMessage(msg);
         });
     }

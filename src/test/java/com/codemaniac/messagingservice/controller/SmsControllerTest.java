@@ -1,5 +1,6 @@
 package com.codemaniac.messagingservice.controller;
 
+import com.codemaniac.messagingservice.TestHelper;
 import com.codemaniac.messagingservice.model.MessageDTO;
 import com.codemaniac.messagingservice.model.SmsMessage;
 import com.codemaniac.messagingservice.service.SmsService;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Collections;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -37,13 +39,13 @@ public class SmsControllerTest {
         // Create an ArgumentCaptor
         ArgumentCaptor<MessageDTO> smsCaptor = ArgumentCaptor.forClass(MessageDTO.class);
         // Call the method under test
-        ResponseEntity<String > response = underTest.sendSms(sms);
+        ResponseEntity<String > response = underTest.sendSms(sms, TestHelper.TEST_APP);
 
         // Assert the response
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         // Verify that the service was called
-        verify(smsService, times(1)).queueSms(smsCaptor.capture());
+        verify(smsService, times(1)).queueSms(smsCaptor.capture(),eq(TestHelper.TEST_APP));
         // Assert the argument
         MessageDTO capturedSms = smsCaptor.getValue();
         assertEquals("+1525215722", capturedSms.getReceivers().get(0));

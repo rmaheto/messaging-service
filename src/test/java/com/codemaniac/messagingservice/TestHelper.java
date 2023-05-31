@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TestHelper {
-
+public static final String TEST_APP ="Test App";
     public static MessageDTO generateEmailMessageDTO(){
         MessageDTO email = new MessageDTO();
         email.setBody("Test Body");

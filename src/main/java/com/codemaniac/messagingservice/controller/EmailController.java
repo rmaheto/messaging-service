@@ -17,8 +17,10 @@ public class EmailController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<Void> sendMessage(@RequestBody MessageDTO email){
-                emailService.queueEmail(email);
+    public ResponseEntity<Void> sendMessage(@RequestBody MessageDTO email,
+                                            @RequestHeader(value = "Calling-Application", required = true)
+                                                    String callingApplication){
+                emailService.queueEmail(email, callingApplication);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

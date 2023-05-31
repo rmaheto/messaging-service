@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ObjectMapperUtil {
 
-    public QueuedMessage mapEmailToMessage(String receiver, String subject, String body){
+    public QueuedMessage mapEmailToMessage(String receiver, String subject, String body,String callingApplication){
         QueuedMessage message = new QueuedMessage();
         message.setReceiver(receiver);
         message.setSubject(subject);
         message.setType(MessageType.EMAIL);
         message.setBody(body);
-        message.setAudit(new Audit(Audit.SYSTEM,Audit.PROGRAM));
+        message.setAudit(new Audit(callingApplication,callingApplication));
         return message;
     }
 
@@ -24,12 +24,12 @@ public class ObjectMapperUtil {
         return email;
     }
 
-    public QueuedMessage mapSmsToMessage(String receiver,  String body){
+    public QueuedMessage mapSmsToMessage(String receiver,  String body,String callingApplication){
         QueuedMessage message = new QueuedMessage();
         message.setReceiver(receiver);
         message.setBody(body);
         message.setType(MessageType.SMS);
-        message.setAudit(new Audit(Audit.SYSTEM,Audit.PROGRAM));
+        message.setAudit(new Audit(callingApplication,callingApplication));
         return message;
     }
 
