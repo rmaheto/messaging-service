@@ -29,7 +29,7 @@ public class MessageService {
 
 
     @Scheduled(fixedRate = 60000) // run every 60 seconds
-    public void processMessages() {
+    public synchronized void processMessages() {
         List<QueuedMessage> messages = messageRepository.findAllByStatusOrderByCreateTimestampAsc("Pending");
 
         for(QueuedMessage message: messages) {

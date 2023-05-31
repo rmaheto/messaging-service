@@ -31,7 +31,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
                 @Server(url = "http://localhost:8090/api/v1", description = "Local server"),
         }
 )
-@EnableScheduling
 public class MessagingServiceApplication {
 
     public static void main(String[] args) {
