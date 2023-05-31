@@ -5,5 +5,5 @@ import com.codemaniac.messagingservice.model.MessageDTO;
 
 public interface EmailService {
     public void sendEmail(Email email);
-    public void queueEmail(MessageDTO email);
+    public void queueEmail(MessageDTO email, String callingApplication);
 }

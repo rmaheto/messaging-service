@@ -116,10 +116,10 @@ public class SmsServiceImplTest {
 
         // Mocks
         QueuedMessage mockedMessage = new QueuedMessage();
-        when(objectMapperUtil.mapSmsToMessage(anyString(), anyString())).thenReturn(mockedMessage);
+        when(objectMapperUtil.mapSmsToMessage(anyString(), anyString(),anyString())).thenReturn(mockedMessage);
 
         // Execute
-        smsService.queueSms(sms);
+        smsService.queueSms(sms,TestHelper.TEST_APP);
 
         // Verify
         verify(queueMessageService, times(sms.getReceivers().size())).queueMessage(captor.capture());

@@ -70,10 +70,10 @@ public class EmailServiceImplTest {
 
         // Mocks
         QueuedMessage mockedMessage = new QueuedMessage();
-        when(objectMapperUtil.mapEmailToMessage(anyString(), anyString(), anyString())).thenReturn(mockedMessage);
+        when(objectMapperUtil.mapEmailToMessage(anyString(), anyString(), anyString(),anyString())).thenReturn(mockedMessage);
 
         // Execute
-        emailService.queueEmail(email);
+        emailService.queueEmail(email,"SYSTEM");
 
         // Verify
         verify(queueMessageService, times(email.getReceivers().size())).queueMessage(captor.capture());
