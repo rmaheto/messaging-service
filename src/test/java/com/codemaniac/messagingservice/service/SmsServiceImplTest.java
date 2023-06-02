@@ -5,7 +5,7 @@ import com.codemaniac.messagingservice.config.MessageCreatorWrapper;
 import com.codemaniac.messagingservice.config.PropertiesLoader;
 import com.codemaniac.messagingservice.exception.SmsSendingException;
 import com.codemaniac.messagingservice.mapper.ObjectMapperUtil;
-import com.codemaniac.messagingservice.model.MessageDTO;
+import com.codemaniac.messagingservice.model.MessageProperties;
 import com.codemaniac.messagingservice.model.QueuedMessage;
 import com.codemaniac.messagingservice.model.SmsMessage;
 import com.twilio.exception.ApiException;
@@ -14,7 +14,6 @@ import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.rest.api.v2010.account.MessageCreator;
 import com.twilio.type.PhoneNumber;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -23,7 +22,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -55,7 +53,7 @@ public class SmsServiceImplTest {
     ArgumentCaptor<QueuedMessage> captor;
 
     private SmsMessage sms;
-    private MessageDTO messageDTO;
+    private MessageProperties messageDTO;
 
     @InjectMocks
     private SmsServiceImpl smsService;
@@ -112,7 +110,7 @@ public class SmsServiceImplTest {
     @Test
     public void queueEmail_Test() {
         // Setup
-        MessageDTO sms = TestHelper.generateSmsMessageDTO();
+        MessageProperties sms = TestHelper.generateSmsMessageDTO();
 
         // Mocks
         QueuedMessage mockedMessage = new QueuedMessage();

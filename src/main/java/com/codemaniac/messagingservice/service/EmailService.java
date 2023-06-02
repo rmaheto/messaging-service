@@ -1,9 +1,9 @@
 package com.codemaniac.messagingservice.service;
 
 import com.codemaniac.messagingservice.model.Email;
-import com.codemaniac.messagingservice.model.MessageDTO;
+import com.codemaniac.messagingservice.model.MessageProperties;
 
 public interface EmailService {
-    public void sendEmail(Email email);
-    public void queueEmail(MessageDTO email, String callingApplication);
+    void sendEmail(Email email);
+    void queueEmail(MessageProperties email, String callingApplication);
 }

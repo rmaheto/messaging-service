@@ -1,7 +1,6 @@
 package com.codemaniac.messagingservice.controller;
 
-import com.codemaniac.messagingservice.model.Email;
-import com.codemaniac.messagingservice.model.MessageDTO;
+import com.codemaniac.messagingservice.model.MessageProperties;
 import com.codemaniac.messagingservice.service.EmailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,8 @@ public class EmailController {
     }
 
     @PostMapping("/send")
-    public ResponseEntity<Void> sendMessage(@RequestBody MessageDTO email,
-                                            @RequestHeader(value = "Calling-Application", required = true)
+    public ResponseEntity<Void> sendMessage(@RequestBody MessageProperties email,
+                                            @RequestHeader(value = "Calling-Application")
                                                     String callingApplication){
                 emailService.queueEmail(email, callingApplication);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -1,18 +1,17 @@
 package com.codemaniac.messagingservice;
 
 import com.codemaniac.messagingservice.model.Email;
-import com.codemaniac.messagingservice.model.MessageDTO;
+import com.codemaniac.messagingservice.model.MessageProperties;
 import com.codemaniac.messagingservice.model.MessageType;
 import com.codemaniac.messagingservice.model.QueuedMessage;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class TestHelper {
 public static final String TEST_APP ="Test App";
-    public static MessageDTO generateEmailMessageDTO(){
-        MessageDTO email = new MessageDTO();
+    public static MessageProperties generateEmailMessageDTO(){
+        MessageProperties email = new MessageProperties();
         email.setBody("Test Body");
         email.setSubject("Test Subject");
         List<String> receivers = Arrays.asList("receiver1@gmail.com", "receiver2@gmail.com");
@@ -20,8 +19,8 @@ public static final String TEST_APP ="Test App";
         return email;
     }
 
-    public static MessageDTO generateSmsMessageDTO(){
-        MessageDTO sms = new MessageDTO();
+    public static MessageProperties generateSmsMessageDTO(){
+        MessageProperties sms = new MessageProperties();
         sms.setBody("Test Body");
         List<String> receivers = Arrays.asList("+1625257272", "+15153421234");
         sms.setReceivers(receivers);

@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.util.List;
 @Data
-public class MessageDTO {
+public class MessageProperties {
     private List<String> receivers;
     private String subject;
     private String body;
