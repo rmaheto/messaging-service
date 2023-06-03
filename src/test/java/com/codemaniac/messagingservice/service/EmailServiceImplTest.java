@@ -4,7 +4,7 @@ import com.codemaniac.messagingservice.TestHelper;
 import com.codemaniac.messagingservice.exception.EmailServerAuthenticationException;
 import com.codemaniac.messagingservice.mapper.ObjectMapperUtil;
 import com.codemaniac.messagingservice.model.Email;
-import com.codemaniac.messagingservice.model.MessageDTO;
+import com.codemaniac.messagingservice.model.MessageProperties;
 import com.codemaniac.messagingservice.model.QueuedMessage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +17,6 @@ import org.springframework.mail.MailAuthenticationException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -66,7 +64,7 @@ public class EmailServiceImplTest {
     @Test
     public void queueEmail_Test() {
         // Setup
-        MessageDTO email = TestHelper.generateEmailMessageDTO();
+        MessageProperties email = TestHelper.generateEmailMessageDTO();
 
         // Mocks
         QueuedMessage mockedMessage = new QueuedMessage();

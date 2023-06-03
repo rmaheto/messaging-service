@@ -1,12 +1,13 @@
 package com.codemaniac.messagingservice.config;
 
 import com.codemaniac.messagingservice.exception.FileLoadException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
-
+@Slf4j
 public class PropertiesLoader {
 
     private Properties props;
@@ -33,11 +34,12 @@ public class PropertiesLoader {
             String keysPath = new File(applicationPath).getParentFile().getAbsolutePath() + File.separator + "keys";
             String filePath = new File(keysPath, fileName).getAbsolutePath();
             try (FileReader fileReader = new FileReader(filePath)) {
-                Properties props = new Properties();
-                props.load(fileReader);
-                return props;
+                Properties properties = new Properties();
+                properties.load(fileReader);
+                return properties;
             }
         } catch (IOException e) {
+            log.error("Error loading properties from file: {}",e.getMessage());
             throw new FileLoadException("Failed to load properties file: " + fileName, e);
         }
     }

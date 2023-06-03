@@ -7,6 +7,7 @@ import com.codemaniac.messagingservice.model.SentMessage;
 import com.codemaniac.messagingservice.repository.QueuedMessageRepository;
 import com.codemaniac.messagingservice.repository.SentMessageRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MessageService {
 
     private final QueuedMessageRepository messageRepository;
@@ -29,7 +31,7 @@ public class MessageService {
 
 
     @Scheduled(fixedRate = 60000) // run every 60 seconds
-    public void processMessages() {
+    public synchronized void processMessages() {
         List<QueuedMessage> messages = messageRepository.findAllByStatusOrderByCreateTimestampAsc("Pending");
 
         for(QueuedMessage message: messages) {
@@ -49,6 +51,7 @@ public class MessageService {
                 messageRepository.delete(message);
 
             } catch (Exception e) {
+                log.error("Error while sending message from queue: {}",e.getMessage());
                 message.setStatus("Error");
                 message.setRetryCount(message.getRetryCount() + 1);
                 messageRepository.save(message);
